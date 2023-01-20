@@ -1,0 +1,102 @@
+--Problem 07
+CREATE TABLE People
+(
+	[Id] INT PRIMARY KEY Identity,
+	[Name] NVARCHAR(200) NOT NULL,
+	[Picture] VARBINARY(MAX),
+	[Height]DECIMAL(5,2),
+	[Weight]DECIMAL(5,2),
+	[Gender]char(1) Not null CHECK(Gender='m' OR Gender='f'),
+	[Birthdate]DATE NOT NULL,
+	[Biography] NVARCHAR(MAX)
+)
+
+INSERT People([Name],[Picture],[Height],[Weight],[Gender],[Birthdate],[Biography])
+VALUES
+	('Pesho',NULL,1.83,66.5,'M','2003-09-22',NULL),
+	('Gosho',NULL,1.53,87.5,'M','2001-11-23',NULL),
+	('Svetlana',NULL,1.67,53.5,'F','2002-12-01',NULL),
+	('Gaby',NULL,1.55,58.5,'F','2003-03-26',NULL),
+	('Qnko',NULL,1.83,67.5,'M','2000-09-22',NULL)
+
+--Problem 08
+CREATE TABLE Users
+(
+	[Id] INT PRIMARY KEY Identity,
+	[Username] VARCHAR(30) NOT NULL,
+	[Password] VARCHAR(26) NOT NULL,
+	[ProfilePicture] VARBINARY(900),
+	[LastLogin] DATE,
+	[IsDeleted] BIT NOT NULL
+)
+
+INSERT Users([Username],[Password],[ProfilePicture],[LastLogin],[IsDeleted])
+VALUES
+	('user1','parola1',NULL,'2017-05-15',0),
+	('user2','parola2',NULL,'2018-05-15',1),
+	('user3','parola3',NULL,'2019-05-15',0),
+	('user4','parola4',NULL,'2020-05-15',1),
+	('user5','parola5',NULL,'2021-05-15',0)
+
+--Problem 13
+CREATE TABLE Directors
+(
+	[Id] INT PRIMARY KEY Identity,
+	[DirectorName] VARCHAR(100),
+	[Notes] VARCHAR(MAX)
+)
+INSERT Directors(DirectorName)
+VALUES
+	('director1'),
+	('director2'),
+	('director3'),
+	('director4'),
+	('director5')
+----
+CREATE TABLE Genres
+(
+	[Id] INT PRIMARY KEY Identity,
+	[GenreName] VARCHAR(200),
+	[Notes] VARCHAR(MAX)
+)
+INSERT Genres(GenreName)
+VALUES
+	('genre1'),
+	('genre2'),
+	('genre3'),
+	('genre4'),
+	('genre5')
+----
+CREATE TABLE Categories
+(
+	[Id] INT PRIMARY KEY Identity,
+	[CategoryName] VARCHAR(200),
+	[Notes] VARCHAR(MAX)
+)
+INSERT Categories(CategoryName)
+VALUES
+	('category1'),
+	('category2'),
+	('category3'),
+	('category4'),
+	('category5')
+----
+CREATE TABLE Movies
+(
+	[Id] INT PRIMARY KEY Identity,
+	[Title] VARCHAR(30) NOT NULL,
+	[DirectorId] INT,
+	[CopyrightYear] DATETIME NOT NULL,
+	[Length]INT NOT NULL,
+	[GenreId] INT NOT NULL,
+	[CategoryId] INT NOT NULL,
+	[Rating] INT NOT NULL,
+	[Notes] VARCHAR(MAX)
+)
+INSERT Movies(Title,DirectorId,CopyrightYear,Length,GenreId,CategoryId,Rating)
+VALUES
+	('movie1',1,'2022-12-12',90,2,3,5),
+	('movie2',1,'2022-12-12',90,2,3,5),
+	('movie3',1,'2022-12-12',90,2,3,5),
+	('movie4',1,'2022-12-12',90,2,3,5),
+	('movie5',1,'2022-12-12',90,2,3,5)
