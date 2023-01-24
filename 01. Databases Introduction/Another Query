@@ -1,0 +1,71 @@
+CREATE DATABASE SoftuniDB1
+
+USE SoftuniDB1
+
+CREATE TABLE Towns
+(
+    [Id] INT PRIMARY KEY Identity,
+	[Name] VARCHAR(30) NOT NULL
+)
+CREATE TABLE Adresses
+(
+	[Id] INT PRIMARY KEY Identity(1,1),
+	[AddressText] VARCHAR(30),
+	[TownId] INT NOT NULL
+)
+CREATE TABLE Departments
+(
+	[Id] INT PRIMARY KEY Identity(1,1),
+	[Name] VARCHAR(30)
+)
+CREATE TABLE Employees
+(
+	[Id] INT PRIMARY KEY IDENTITY NOT NULL,
+	[FirstName] VARCHAR(30) NOT NULL,
+	[MiddleName] VARCHAR(30),
+	[LastName] VARCHAR(30) NOT NULL,
+	[JobTitle] VARCHAR(30),
+	[DepartmentId] INT NOT NULL,
+	[HireDate] DATE NOT NULL,
+	[Salary] INT,
+)
+DROP DATABASE Hotel
+
+INSERT INTO Employees(FirstName,MiddleName,LastName,JobTitle,DepartmentId,HireDate,Salary)
+VALUES
+	('Ivan'  , 'Ivanov' , 'Ivanov' , '.NET Developer', 6, '2006-12-30', 3500),
+	('Petar' , 'Petrov' , 'Petrov' , 'Java Developer', 3, '2016-11-11', 3500),
+    ('Maria' , 'Petrova', 'Ivanova', 'Intern'        , 9, '2018-10-10', 1500), 
+	('Georgi', 'Teziev' , 'Ivanov' , 'CEO'           , 1, '2015-01-01', 15500),
+	('Peter' , 'Pan'    , 'Panov'  , '.NET Developer', 6, '2016-06-22', 3200)
+
+SELECT CONCAT([FirstName],' ',[MiddleName],' ',[LastName]) AS [Name] FROM Employees
+
+delete from Employees where Id = 2;
+
+SELECT CONCAT([FirstName],' ',[MiddleName],' ',[LastName]) AS [Name], JobTitle, DepartmentId, HireDate, Salary
+FROM [Employees]
+
+UPDATE Employees 
+   SET Salary *= 1.1;
+
+SELECT [Salary] FROM [Employees]
+
+USE Hotel;
+
+UPDATE Payments
+  SET
+      TaxRate = TaxRate - (TaxRate * 0.03);
+
+SELECT TaxRate
+FROM Payments;
+
+/* ******************************************
+	Problem 24.	Delete All Records
+*********************************************/
+
+TRUNCATE TABLE Occupancies;
+
+/* ----- DELETE Works but is slower than TRUNCATE -----
+DELETE FROM Occupancies;
+*/
