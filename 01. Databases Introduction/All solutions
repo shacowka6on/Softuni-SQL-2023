@@ -100,3 +100,595 @@ VALUES
 	('movie3',1,'2022-12-12',90,2,3,5),
 	('movie4',1,'2022-12-12',90,2,3,5),
 	('movie5',1,'2022-12-12',90,2,3,5)
+	
+--Problem 14
+CREATE DATABASE CarRental;
+GO
+
+USE CarRental;
+
+CREATE TABLE Categories
+(
+             Id           INT
+             PRIMARY KEY NOT NULL,
+             CategoryName NVARCHAR(50) NOT NULL,
+             DailyRate    DECIMAL(10, 2),
+             WeeklyRate   DECIMAL(10, 2),
+             MonthlyRate  DECIMAL(10, 2),
+             WeekendRate  DECIMAL(10, 2)
+);
+
+ALTER TABLE Categories
+ADD CONSTRAINT CK_AtLeastOneRate CHECK((DailyRate IS NOT NULL)
+                                       OR (WeeklyRate IS NOT NULL)
+                                       OR (MonthlyRate IS NOT NULL)
+                                       OR (WeekendRate IS NOT NULL));
+
+INSERT INTO Categories(Id,
+                       CategoryName,
+                       DailyRate,
+                       WeeklyRate,
+                       MonthlyRate,
+                       WeekendRate
+                      )
+VALUES
+(
+       1,
+       'First Category',
+       10,
+       50,
+       200,
+       50
+),
+(
+       2,
+       'Second Category',
+       20,
+       90,
+       330,
+       100
+),
+(
+       3,
+       'Third Category',
+       30,
+       130,
+       2700,
+       155
+);
+
+CREATE TABLE Cars
+(
+             Id           INT
+             PRIMARY KEY NOT NULL,
+             PlateNumber  VARCHAR(50) NOT NULL,
+             Manufacturer VARCHAR(50) NOT NULL,
+             Model        VARCHAR(50) NOT NULL,
+             CarYear      INT NOT NULL,
+             CategoryId   INT NOT NULL
+                              FOREIGN KEY REFERENCES Categories(Id),
+             Doors        TINYINT NOT NULL,
+             Picture      VARBINARY(MAX),
+             Condition    NVARCHAR(50),
+             Available    BIT DEFAULT 1
+);
+
+INSERT INTO Cars(Id,
+                 PlateNumber,
+                 Manufacturer,
+                 Model,
+                 CarYear,
+                 CategoryId,
+                 Doors,
+                 Available
+                )
+VALUES
+(
+       1,
+       'CT7777CB',
+       'BMW',
+       '320',
+       '2002',
+       3,
+       4,
+       1
+),
+(
+       2,
+       'CT7557CB',
+       'BMW',
+       '535',
+       '2009',
+       3,
+       4,
+       1
+),
+(
+       3,
+       'CT7373CB',
+       'BMW',
+       '320',
+       '1989',
+       1,
+       2,
+       1
+);
+
+CREATE TABLE Employees
+(
+             Id        INT
+             PRIMARY KEY NOT NULL,
+             FirstName NVARCHAR(50) NOT NULL,
+             LastName  NVARCHAR(50) NOT NULL,
+             Title     NVARCHAR(50) NOT NULL,
+             Notes     NVARCHAR(MAX)
+);
+
+INSERT INTO Employees(Id,
+                      FirstName,
+                      LastName,
+                      Title
+                     )
+VALUES
+(
+       1,
+       'First',
+       'One',
+       'Mechanic'
+),
+(      2,
+       'Second',
+       'Two',
+       'Team Leader'
+),
+(
+       3,
+       'Third',
+       'Three',
+       'Boss'
+);
+
+CREATE TABLE Customers
+(
+             Id                  INT NOT NULL PRIMARY KEY,
+             DriverLicenceNumber VARCHAR(50)
+             UNIQUE NOT NULL,
+             FullName            NVARCHAR(50) NOT NULL,
+             [Address]           NVARCHAR(255),
+             City                NVARCHAR(50),
+             ZIPCode             NVARCHAR(50),
+             Notes               NVARCHAR(MAX)
+);
+
+INSERT INTO Customers(Id,
+                      DriverLicenceNumber,
+                      FullName
+                     )
+VALUES
+(
+       1,
+       '123',
+       'First Name'
+),
+(
+       2,
+       '234',
+       'Second Name'
+),
+(
+       3,
+       '345',
+       'Third Name'
+);
+
+CREATE TABLE RentalOrders
+(
+             Id               INT
+             PRIMARY KEY NOT NULL,
+             EmployeeId       INT NOT NULL
+                                  FOREIGN KEY REFERENCES Employees(Id),
+             CustomerId       INT NOT NULL
+                                  FOREIGN KEY REFERENCES Customers(Id),
+             CarId            INT NOT NULL
+                                  FOREIGN KEY REFERENCES Cars(Id),
+             TankLevel        NUMERIC(5, 2),
+             KilometrageStart INT,
+             KilometrageEnd   INT,
+             TotalKilometrage INT,
+             StartDate        DATE NOT NULL,
+             EndDate          DATE NOT NULL,
+             TotalDays        INT NOT NULL, 
+             RateApplied      DECIMAL(10, 2),
+             TaxRate          DECIMAL(10, 2),
+             OrderStatus      NVARCHAR(50),
+             NOTES            NVARCHAR(MAX)
+);
+
+ALTER TABLE RentalOrders
+ADD CONSTRAINT CK_TotalDays CHECK(DATEDIFF(DAY, StartDate, EndDate) = TotalDays);
+
+INSERT INTO RentalOrders(Id,
+                         EmployeeId,
+                         CustomerId,
+                         CarId,
+                         StartDate,
+                         EndDate,
+                         TotalDays
+                        )
+VALUES
+(
+       1,
+       3,
+       3,
+       3,
+       '01-01-2010',
+       '01-02-2010',
+       1
+),
+(
+       2,
+       1,
+       1,
+       1,
+       '01-01-2010',
+       '01-03-2010',
+       2
+),
+(
+       3,
+       2,
+       2,
+       2,
+       '01-01-2010',
+       '01-04-2010',
+       3
+);
+
+
+--Problem 16
+--CREATE DATABASE Hotel;
+--GO
+
+--USE Hotel;
+
+--CREATE TABLE Employees
+--(
+--             Id        INT
+--             PRIMARY KEY NOT NULL,
+--             FirstName NVARCHAR(50) NOT NULL,
+--             LastName  NVARCHAR(50) NOT NULL,
+--             Title     NVARCHAR(255) NOT NULL,
+--             Notes     NVARCHAR(MAX)
+--);
+
+--INSERT INTO Employees(Id,
+--                      FirstName,
+--                      LastName,
+--                      Title
+--                     )
+--VALUES
+--(
+--       1,
+--       'First',
+--       'Employee',
+--       'Manager'
+--),
+--(
+--       2,
+--       'Second',
+--       'Employee',
+--       'Manager'
+--),
+--(
+--       3,
+--       'Third',
+--       'Employee',
+--       'Manager'
+--);
+
+--CREATE TABLE Customers
+--(
+--             AccountNumber   INT
+--             PRIMARY KEY NOT NULL,
+--             FirstName       NVARCHAR(50) NOT NULL,
+--             LastName        NVARCHAR(50) NOT NULL,
+--             PhoneNumber     VARCHAR(50),
+--             EmergencyName   NVARCHAR(50) NOT NULL,
+--             EmergencyNumber INT NOT NULL,
+--             Notes           NVARCHAR(50)
+--);
+
+--INSERT INTO Customers(AccountNumber,
+--                      FirstName,
+--                      LastName,
+--                      EmergencyName,
+--                      EmergencyNumber
+--                     )
+--VALUES
+--(
+--       1,
+--       'First',
+--       'Customer',
+--       'Em1',
+--       11111
+--),
+--(
+--       2,
+--       'Second',
+--       'Customer',
+--       'Em2',
+--       22222
+--),
+--(
+--       3,
+--       'Third',
+--       'Customer',
+--       'Em3',
+--       33333
+--);
+
+--CREATE TABLE RoomStatus
+--(
+--             RoomStatus NVARCHAR(50)
+--             PRIMARY KEY NOT NULL,
+--             Notes      NVARCHAR(MAX)
+--);
+
+--INSERT INTO RoomStatus(RoomStatus)
+--VALUES
+--(
+--       'Free'
+--),
+--(
+--       'In use'
+--),
+--(
+--       'Reserved'
+--);
+
+--CREATE TABLE RoomTypes
+--(
+--             RoomType NVARCHAR(50)
+--             PRIMARY KEY NOT NULL,
+--             Notes    NVARCHAR(MAX)
+--);
+
+--INSERT INTO RoomTypes(RoomType)
+--VALUES
+--(
+--       'Luxory'
+--),
+--(
+--       'Casual'
+--),
+--(
+--       'Misery'
+--);
+
+--CREATE TABLE BedTypes
+--(
+--             BedType NVARCHAR(50)
+--             PRIMARY KEY NOT NULL,
+--             Notes   NVARCHAR(MAX)
+--);
+
+--INSERT INTO BedTypes(BedType)
+--VALUES
+--(
+--       'Single'
+--),
+--(
+--       'Double'
+--),
+--(
+--       'King'
+--);
+
+--CREATE TABLE Rooms
+--(
+--             RoomNumber INT
+--             PRIMARY KEY NOT NULL,
+--             RoomType   NVARCHAR(50) NOT NULL,
+--             BedType    NVARCHAR(50) NOT NULL,
+--             Rate       DECIMAL(10, 2) NOT NULL,
+--             RoomStatus NVARCHAR(50) NOT NULL,
+--             Notes      NVARCHAR(MAX)
+--);
+
+--INSERT INTO Rooms(RoomNumber,
+--                  RoomType,
+--                  BedType,
+--                  Rate,
+--                  RoomStatus
+--                 )
+--VALUES
+--(
+--       1,
+--       'Luxory',
+--       'King',
+--       100,
+--       'Reserved'
+--),
+--(
+--       2,
+--       'Casual',
+--       'Double',
+--       50,
+--       'In use'
+--),
+--(
+--       3,
+--       'Misery',
+--       'Single',
+--       19,
+--       'Free'
+--);
+
+--CREATE TABLE Payments
+--(
+--             Id                INT
+--             PRIMARY KEY NOT NULL,
+--             EmployeeId        INT NOT NULL,
+--             PaymentDate       DATE NOT NULL,
+--             AccountNumber     INT NOT NULL,
+--             FirstDateOccupied DATE NOT NULL,
+--             LastDateOccupied  DATE NOT NULL,
+--             TotalDays         INT NOT NULL,
+--             AmountCharged     DECIMAL(10, 2) NOT NULL,
+--             TaxRate           DECIMAL(10, 2) NOT NULL,
+--             TaxAmount         DECIMAL(10, 2) NOT NULL,
+--             PaymentTotal      DECIMAL(10, 2) NOT NULL,
+--             Notes             NVARCHAR(MAX)
+--);
+
+--ALTER TABLE Payments
+--ADD CONSTRAINT CK_TotalDays CHECK(DATEDIFF(DAY, FirstDateOccupied, LastDateOccupied) = TotalDays);
+
+--ALTER TABLE Payments
+--ADD CONSTRAINT CK_TaxAmount CHECK(TaxAmount = TotalDays * TaxRate);
+
+--INSERT INTO Payments(Id,
+--                     EmployeeId,
+--                     PaymentDate,
+--                     AccountNumber,
+--                     FirstDateOccupied,
+--                     LastDateOccupied,
+--                     TotalDays,
+--                     AmountCharged,
+--                     TaxRate,
+--                     TaxAmount,
+--                     PaymentTotal
+--                    )
+--VALUES
+--(
+--       1,
+--       1,
+--       '10-05-2015',
+--       1,
+--       '10-05-2015',
+--       '10-10-2015',
+--       5,
+--       75,
+--       50,
+--       250,
+--       75
+--),
+--(
+--       2,
+--       3,
+--       '10-11-2015',
+--       1,
+--       '12-15-2015',
+--       '12-25-2015',
+--       10,
+--       100,
+--       50,
+--       500,
+--       100
+--),
+--(
+--       3,
+--       2,
+--       '12-23-2015',
+--       1,
+--       '12-23-2015',
+--       '12-24-2015',
+--       1,
+--       75,
+--       75,
+--       75,
+--       75
+--);
+
+--CREATE TABLE Occupancies
+--(
+--             Id            INT
+--             PRIMARY KEY NOT NULL,
+--             EmployeeId    INT NOT NULL,
+--             DateOccupied  DATE NOT NULL,
+--             AccountNumber INT NOT NULL,
+--             RoomNumber    INT NOT NULL,
+--             RateApplied   DECIMAL(10, 2),
+--             PhoneCharge   VARCHAR(50) NOT NULL,
+--             Notes         NVARCHAR(MAX)
+--);
+
+--INSERT INTO Occupancies(Id,
+--                        EmployeeId,
+--                        DateOccupied,
+--                        AccountNumber,
+--                        RoomNumber,
+--                        PhoneCharge
+--                       )
+--VALUES
+--(
+--       1,
+--       2,
+--       '08-24-2012',
+--       3,
+--       1,
+--       '088 88 888 888'
+--),
+--(
+--       2,
+--       3,
+--       '06-15-2015',
+--       2,
+--       3,
+--       '088 88 555 555'
+--),
+--(
+--       3,
+--       1,
+--       '05-12-1016',
+--       1,
+--       2,
+--       '088 88 555 333'
+--);
+
+--Problem 16
+DROP TABLE Employees
+
+CREATE DATABASE SoftuniDB
+
+USE SoftuniDB
+
+CREATE TABLE Towns
+(
+    [Id] INT PRIMARY KEY Identity,
+	[Name] VARCHAR(30) NOT NULL
+)
+CREATE TABLE Adresses
+(
+	[Id] INT PRIMARY KEY Identity(1,1),
+	[AddressText] VARCHAR(30),
+	[TownId] INT NOT NULL
+)
+CREATE TABLE Departments
+(
+	[Id] INT PRIMARY KEY Identity(1,1),
+	[Name] VARCHAR(30)
+)
+CREATE TABLE Employees
+(
+	[Id] INT PRIMARY KEY IDENTITY NOT NULL,
+	[FirstName] VARCHAR(30) NOT NULL,
+	[MiddleName] VARCHAR(30),
+	[LastName] VARCHAR(30) NOT NULL,
+	[JobTitle] VARCHAR(30),
+	[DepartmentId] INT NOT NULL,
+	[HireDate] DATE NOT NULL,
+	[Salary] INT,
+)
+DROP DATABASE Hotel
+
+INSERT INTO Employees(FirstName,MiddleName,LastName,JobTitle,DepartmentId,HireDate,Salary)
+VALUES
+	('Ivan', 'Ivanov', 'Ivanov', '.NET Developer', 6, '05-12-2016', 3500),
+	('Petar', 'Petrov', 'Petrov', 'Java Developer', 3, '06-12-2016', 3500),
+    ('Maria', 'Petrova', 'Ivanova', 'Intern', 9, '22-12-2018', 1500), 
+	('Georgi', 'Teziev', 'Ivanov', 'CEO', 1, '01-09-2015', 15500),
+	('Peter', 'Pan', 'Panov', '.NET Developer', 6, '06-12-2016', 3200)
+
+SELECT CONCAT([FirstName],' ',[MiddleName],' ',[LastName]) AS [Name], JobTitle, DepartmentId, HireDate, Salary
+FROM [Employees]
