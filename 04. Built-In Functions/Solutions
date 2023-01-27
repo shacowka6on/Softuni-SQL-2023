@@ -1,0 +1,150 @@
+USE [SoftUni]
+
+--Problem 01
+SELECT [FirstName], 
+	   [LastName] 
+  FROM [Employees]  
+ WHERE [FirstName] LIKE 'sa%'
+
+--Problem 02
+SELECT [FirstName], 
+	   [LastName] 
+  FROM [Employees]  
+ WHERE [LastName] LIKE '%ei%'
+
+--Problem 03
+SELECT [FirstName] 
+  FROM [Employees] 
+ WHERE [DepartmentID] = 3 OR [DepartmentID] = 10 
+   AND [HireDate] BETWEEN '1995/01/01' AND '2005/12/31'
+
+--Problem 04
+SELECT [FirstName], [LastName]
+  FROM [Employees] 
+ WHERE [JobTitle] NOT LIKE '%engineer%'
+
+--Problem 05
+SELECT [Name] 
+  FROM [Towns] 
+ WHERE LEN([Name]) = 5 OR LEN([Name]) = 6 
+ ORDER BY [Name] ASC
+
+--Problem 06
+SELECT * 
+  FROM [Towns] 
+ WHERE [Name] LIKE 'M%' OR [Name] LIKE 'K%' OR [Name] LIKE 'B%' OR [Name] LIKE 'E%' 
+ ORDER BY [Name] ASC
+
+--Problem 07
+SELECT * 
+  FROM [Towns] 
+ WHERE LEFT(Name, 1) NOT LIKE '[RBD]'
+ ORDER BY [Name] ASC
+
+--Problem 08
+CREATE VIEW V_EmployeesHiredAfter2000 
+AS
+	SELECT [FirstName], [LastName] 
+	  FROM [Employees] 
+	 WHERE DATEPART(YEAR, [HireDate]) > 2000
+
+--Problem 09
+SELECT [FirstName],[LastName] 
+  FROM [Employees] 
+ WHERE LEN([LastName]) = 5
+
+
+ --Problem 10
+SELECT *
+FROM (
+       SELECT EmployeeID,
+              FirstName,
+              LastName,
+              Salary,
+              DENSE_RANK() over (partition by [Salary] ORDER BY [EmployeeID]) AS Rank
+       FROM [Employees]
+       WHERE Salary BETWEEN 10000 AND 50000) AS MyTable
+ORDER BY Salary DESC 
+
+--Problem 11
+SELECT *
+FROM (
+       SELECT EmployeeID,
+              FirstName,
+              LastName,
+              Salary,
+              DENSE_RANK() over (partition by [Salary] ORDER BY [EmployeeID]) AS Rank
+       FROM [Employees]
+       WHERE Salary BETWEEN 10000 AND 50000) AS MyTable
+WHERE Rank = 2
+ORDER BY Salary DESC 
+
+--Problem 12
+USE [Geography]
+
+SELECT [CountryName], [IsoCode]
+  FROM [Countries] 
+ WHERE [CountryName] LIKE '%a%a%a%'
+ ORDER BY [IsoCode] ASC
+
+--Problem 13
+SELECT * FROM [Rivers]
+SELECT * FROM [Peaks]
+
+SELECT [PeakName],[RiverName],CONCAT(SUBSTRING(LOWER(PeakName),1,LEN(PeakName)-1), '', SUBSTRING(LOWER(RiverName),1,LEN(RiverName)))
+AS Mix FROM [Rivers],[Peaks]
+WHERE RIGHT([PeakName], 1) = LEFT([RiverName], 1) 
+ORDER BY Mix
+
+--Problem 14
+USE [Diablo]
+
+SELECT TOP 50 [Name], 
+			  FORMAT(CAST([Start] AS DATE), 'yyyy-MM-dd') AS [Start]
+ FROM [Games] 
+WHERE DATEPART(YEAR, [Start]) BETWEEN 2011 AND 2012 
+ORDER BY [Start], [Name]
+
+--Problem 15
+SELECT [Username], 
+       RIGHT([Email], LEN(Email)-CHARINDEX('@',Email)) AS [Email Provider]
+  FROM [Users] 
+ ORDER BY [Email Provider], 
+          [Username] ASC
+
+--Problem 16
+SELECT Username,
+       IpAddress AS [IP Address]
+FROM Users
+WHERE IpAddress LIKE '___.1_%._%.___'
+ORDER BY Username;
+
+--Problem 17
+ SELECT [Name] AS [Game],
+	    CASE
+			WHEN DATEPART(HOUR, [Start]) BETWEEN 0 AND 11
+			THEN 'Morning'
+			WHEN DATEPART(HOUR, [Start]) BETWEEN 12 AND 17
+			THEN 'Afternoon'
+			WHEN DATEPART(HOUR, [Start]) BETWEEN 18 AND 24
+			THEN 'Evening'
+			ELSE 'N\A'
+		END AS [Part of the Day], 
+	    CASE
+			WHEN [Duration] <= 3
+			THEN 'Extra Short'
+			WHEN [Duration] >= 4 AND [Duration] <= 6
+			THEN 'Short'
+			WHEN [Duration] > 6
+			THEN 'Long'
+			ELSE 'Extra Long'
+		END AS [Duration]
+ FROM [Games]
+ ORDER BY [Name], [Duration], [Part of the Day]
+
+ --Problem 18
+ SELECT ProductName,
+       OrderDate,
+       DATEADD(DAY, 3, OrderDate) AS [Pay Due],
+       DATEADD(MONTH, 1, OrderDate) AS [Deliver Due]
+ FROM Orders;
